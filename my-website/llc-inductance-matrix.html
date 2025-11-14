@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformer Inductance Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .input-section, .results-section, .transformer-img {
+            flex: 1;
+            min-width: 300px;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .transformer-img {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .transformer-img img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .img-caption {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .checkbox-group {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-group input {
+            margin-right: 10px;
+            transform: scale(1.3);
+        }
+        
+        button {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 100%;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background: linear-gradient(to right, #2980b9, #3498db);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .result-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            transition: transform 0.3s;
+        }
+        
+        .result-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .result-label {
+            font-weight: bold;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+        }
+        
+        .result-label i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .result-value {
+            font-size: 20px;
+            color: #e74c3c;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .explanation {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        
+        .explanation h2 {
+            margin-bottom: 15px;
+        }
+        
+        .explanation p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-bolt"></i> Transformer Inductance Calculator</h1>
+            <p class="subtitle">Calculate key transformer parameters based on inductance matrix values</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <h2><i class="fas fa-sliders-h"></i> Input Parameters</h2>
+                <div class="input-group">
+                    <label for="L11">L₁₁ (Primary Inductance):</label>
+                    <input type="number" id="L11" step="any" placeholder="Enter value in Henry">
+                </div>
+                <div class="input-group">
+                    <label for="L22">L₂₂ (Secondary Inductance):</label>
+                    <input type="number" id="L22" step="any" placeholder="Enter value in Henry">
+                </div>
+                <div class="input-group">
+                    <label for="M">M (Mutual Inductance):</label>
+                    <input type="number" id="M" step="any" placeholder="Enter value in Henry">
+                </div>
+                <div class="input-group">
+                    <label for="N">Turn Ratio (N):</label>
+                    <input type="number" id="N" step="any" placeholder="Enter value">
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="useExternalInductor">
+                    <label for="useExternalInductor">Include External Choke Inductance</label>
+                </div>
+                
+                <div class="input-group external-inductor hidden">
+                    <label for="L_Inductor">External Choke Inductance (L<sub>Inductor</sub>):</label>
+                    <input type="number" id="L_Inductor" step="any" placeholder="Enter value in Henry" value="0">
+                </div>
+                
+                <button id="calculateBtn">
+                    <i class="fas fa-calculator"></i> Calculate
+                </button>
+            </div>
+            
+            <div class="transformer-img">
+                <h2><i class="fas fa-image"></i> Transformer Diagram</h2>
+                <img src="https://media.monolithicpower.com/wysiwyg/Articles/A-0028_fig1.png" alt="Transformer Equivalent Circuit">
+                <p class="img-caption">Equivalent circuit of a transformer with leakage inductance</p>
+            </div>
+            
+            <div class="results-section">
+                <h2><i class="fas fa-chart-line"></i> Calculation Results</h2>
+                <div class="result-item">
+                    <div class="result-label"><i class="fas fa-link"></i> Coupling Coefficient (k):</div>
+                    <div class="result-value" id="k-value">-</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label"><i class="fas fa-project-diagram"></i> Primary Leakage Inductance (L<sub>lk1</sub>):</div>
+                    <div class="result-value" id="Llk1-value">-</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label"><i class="fas fa-magnet"></i> Primary Magnetizing Inductance (L<sub>mg1</sub>):</div>
+                    <div class="result-value" id="Lmg1-value">-</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label"><i class="fas fa-bolt"></i> L Primary (Short Secondary):</div>
+                    <div class="result-value" id="short-circuit-value">-</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label"><i class="fas fa-plug"></i> L Primary (Open Secondary):</div>
+                    <div class="result-value" id="open-circuit-value">-</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="explanation">
+            <h2><i class="fas fa-info-circle"></i> About This Calculator</h2>
+            <p>This calculator determines key transformer parameters based on the inductance matrix values. The calculations are based on standard transformer equations that relate the mutual inductance (M), self-inductances (L₁₁ and L₂₂), and turn ratio (N) to the coupling coefficient, leakage inductance, and magnetizing inductance.</p>
+            <p>When the external choke inductance option is selected, the calculator adds the external inductance value to both the short-circuit and open-circuit primary inductance measurements, simulating the effect of an external inductor in series with the transformer primary winding.</p>
+        </div>
+        
+        <footer>
+            <p>Transformer Inductance Calculator &copy; 2023 | Engineering Tools</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const useExternalInductor = document.getElementById('useExternalInductor');
+            const externalInductorGroup = document.querySelector('.external-inductor');
+            
+            useExternalInductor.addEventListener('change', function() {
+                if (this.checked) {
+                    externalInductorGroup.classList.remove('hidden');
+                } else {
+                    externalInductorGroup.classList.add('hidden');
+                    document.getElementById('L_Inductor').value = '0';
+                }
+            });
+            
+            document.getElementById('calculateBtn').addEventListener('click', function() {
+                calculateInductanceMatrix();
+            });
+            
+            function calculateInductanceMatrix() {
+                // Get input values
+                const L11 = parseFloat(document.getElementById('L11').value) || 0;
+                const L22 = parseFloat(document.getElementById('L22').value) || 0;
+                const M = parseFloat(document.getElementById('M').value) || 0;
+                const N = parseFloat(document.getElementById('N').value) || 1;
+                const useExternal = document.getElementById('useExternalInductor').checked;
+                const L_inductor = useExternal ? (parseFloat(document.getElementById('L_Inductor').value) || 0) : 0;
+                
+                // Validate inputs
+                if (L11 <= 0 || L22 <= 0 || M <= 0 || N <= 0) {
+                    alert("Please enter positive values for all parameters.");
+                    return;
+                }
+                
+                if (M > Math.sqrt(L11 * L22)) {
+                    alert("Mutual inductance (M) cannot be greater than √(L₁₁ × L₂₂).");
+                    return;
+                }
+                
+                // Calculate coupling coefficient
+                const k = M / Math.sqrt(L11 * L22);
+                
+                // Calculate leakage and magnetizing inductances
+                const Llk1 = L11 * (1 - k);
+                const Lmg1 = L11 * k;
+                
+                // Calculate short-circuit inductance (secondary shorted) without external inductor
+                const shortCircuitWithoutChoke = L11 * (1 - k**2);
+                
+                // Calculate open-circuit inductance (secondary open) without external inductor
+                const openCircuitWithoutChoke = L11;
+                
+                // Add external inductor if included
+                const shortCircuit = shortCircuitWithoutChoke + L_inductor;
+                const openCircuit = openCircuitWithoutChoke + L_inductor;
+                
+                // Update results
+                document.getElementById('k-value').textContent = k.toFixed(6);
+                document.getElementById('Llk1-value').textContent = Llk1.toFixed(6) + " H";
+                document.getElementById('Lmg1-value').textContent = Lmg1.toFixed(6) + " H";
+                document.getElementById('short-circuit-value').textContent = shortCircuit.toFixed(6) + " H" + 
+                    (L_inductor > 0 ? " (includes external choke)" : "");
+                document.getElementById('open-circuit-value').textContent = openCircuit.toFixed(6) + " H" + 
+                    (L_inductor > 0 ? " (includes external choke)" : "");
+            }
+        });
+    </script>
+</body>
+</html>
