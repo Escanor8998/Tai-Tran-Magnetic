@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wire Convert & DCR Calculator designed by Tai Tran R&D</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+        }
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            justify-content: center;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            max-width: 500px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+        }
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f1f1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h2 i {
+            color: #3498db;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+        }
+        input:focus, select:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            background-color: white;
+        }
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            margin: 0 15px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #3498db;
+        }
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+        .switch-label {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+        button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        button:hover {
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .result h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .result p {
+            margin: 10px 0;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .result-value {
+            font-weight: 600;
+            color: #e74c3c;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            width: 100%;
+            padding: 20px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .card {
+                max-width: 100%;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+        .input-with-icon {
+            position: relative;
+        }
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+        }
+        .input-with-icon input {
+            padding-left: 45px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            color: #3498db;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-calculator"></i> WIRE CONVERT & DCR CALCULATOR</h1>
+        <p>Công cụ tính toán chuyển đổi dây điện và điện trở DC - Thiết kế bởi Tai Tran R&D</p>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-exchange-alt"></i> AWG to mm CONVERTER</h2>
+                <div class="card-icon">
+                    <i class="fas fa-ruler"></i>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="awgInput">AWG <span class="tooltip"><i class="fas fa-info-circle"></i>
+                    <span class="tooltiptext">American Wire Gauge - Tiêu chuẩn đo đường kính dây điện</span>
+                </span></label>
+                <div class="input-with-icon">
+                    <i class="fas fa-code-branch"></i>
+                    <input type="number" id="awgInput" placeholder="Enter AWG value" min="0" max="40" step="0.5">
+                </div>
+            </div>
+            
+            <div class="switch-container">
+                <span class="switch-label">mm</span>
+                <label class="switch">
+                    <input type="checkbox" id="unitSwitch">
+                    <span class="slider"></span>
+                </label>
+                <span class="switch-label">inch</span>
+            </div>
+            
+            <div class="input-group">
+                <label for="mmInput" id="sizeLabel">Diameter (mm)</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-ruler-combined"></i>
+                    <input type="number" id="mmInput" placeholder="Enter diameter value" step="0.001">
+                </div>
+            </div>
+            
+            <button id="convertBtn">
+                <i class="fas fa-sync-alt"></i> Convert
+            </button>
+            
+            <div class="result">
+                <h3><i class="fas fa-clipboard-check"></i> Kết quả:</h3>
+                <p id="conversionResult">Vui lòng nhập giá trị để chuyển đổi</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-braille"></i> LITZ WIRE CALCULATOR</h2>
+                <div class="card-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="strands">No. of strands</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-layer-group"></i>
+                    <input type="number" id="strands" placeholder="Enter number of strands" min="1" value="7">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="wireDiameter">Wire ø (mm)</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-circle"></i>
+                    <input type="number" id="wireDiameter" placeholder="Enter wire diameter" min="0.01" step="0.001" value="0.1">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="insulationThickness">Insulation thickness (mm) - optional</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-vector-square"></i>
+                    <input type="number" id="insulationThickness" placeholder="Enter insulation thickness" min="0" step="0.001" value="0.02">
+                </div>
+            </div>
+            
+            <button id="calculateLitzBtn">
+                <i class="fas fa-calculator"></i> Calculate
+            </button>
+            
+            <div class="result">
+                <h3><i class="fas fa-clipboard-check"></i> Kết quả:</h3>
+                <p>Overall diameter: <span id="overallDiameter" class="result-value">-</span> mm</p>
+                <p>Overall diameter (including insulation): <span id="overallDiameterInsulated" class="result-value">-</span> mm</p>
+                <p>Cross section: <span id="crossSection" class="result-value">-</span> mm²</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-bolt"></i> DCR CALCULATOR</h2>
+                <div class="card-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="meanTurnLength">Mean turn length (m)</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-ruler"></i>
+                    <input type="number" id="meanTurnLength" step="0.001" min="0" placeholder="Enter mean turn length" value="0.1">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="numberOfTurns">Number of turns</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-redo"></i>
+                    <input type="number" id="numberOfTurns" min="1" placeholder="Enter number of turns" value="100">
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="sectionArea">Section area (mm²)</label>
+                <div class="input-with-icon">
+                    <i class="fas fa-square"></i>
+                    <input type="number" id="sectionArea" step="0.001" min="0" placeholder="Enter section area" value="0.5">
+                </div>
+            </div>
+            
+            <button id="calculateDcrBtn">
+                <i class="fas fa-bolt"></i> CALCULATE
+            </button>
+            
+            <div class="result">
+                <h3><i class="fas fa-clipboard-check"></i> Kết quả:</h3>
+                <p>DCR: <span id="dcrResult" class="result-value">-</span> Ω</p>
+                <p>Copper weight: <span id="copperWeightResult" class="result-value">-</span> kg (<span id="copperWeightGrams" class="result-value">-</span> g)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2023 Tai Tran R&D | Designed with <i class="fas fa-heart" style="color:#e74c3c"></i> for engineers</p>
+    </div>
+
+    <script>
+        // AWG conversion functions
+        function awgToMm(awg) {
+            // Công thức chuyển đổi AWG sang mm: 92^((36-AWG)/39)*0.127
+            return Math.pow(92, (36 - awg) / 39) * 0.127;
+        }
+        
+        function mmToAwg(mm) {
+            // Công thức chuyển đổi mm sang AWG: 36 - 39*log(mm/0.127)/log(92)
+            const exactAwg = 36 - 39 * Math.log(mm / 0.127) / Math.log(92);
+            
+            // Làm tròn đến giá trị AWG gần nhất (thường là bội số của 0.5)
+            return Math.round(exactAwg * 2) / 2;
+        }
+        
+        // Unit switch functionality
+        const unitSwitch = document.getElementById('unitSwitch');
+        const sizeLabel = document.getElementById('sizeLabel');
+        const mmInput = document.getElementById('mmInput');
+
+        unitSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                sizeLabel.textContent = 'Diameter (inch)';
+                mmInput.placeholder = 'Enter diameter value in inches';
+            } else {
+                sizeLabel.textContent = 'Diameter (mm)';
+                mmInput.placeholder = 'Enter diameter value in mm';
+            }
+        });
+
+        // Conversion function
+        document.getElementById('convertBtn').addEventListener('click', function() {
+            const awgValue = parseFloat(document.getElementById('awgInput').value);
+            const sizeValue = parseFloat(document.getElementById('mmInput').value);
+            const isInch = unitSwitch.checked;
+            const resultElement = document.getElementById('conversionResult');
+            
+            if (!isNaN(awgValue) && isNaN(sizeValue)) {
+                // Convert AWG to mm/inches
+                const mm = awgToMm(awgValue);
+                const inches = mm / 25.4;
+                
+                resultElement.innerHTML = `
+                    AWG ${awgValue} = <strong>${mm.toFixed(4)} mm</strong><br>
+                    AWG ${awgValue} = <strong>${inches.toFixed(6)} inches</strong>
+                `;
+            } else if (isNaN(awgValue) && !isNaN(sizeValue)) {
+                // Convert mm/inches to AWG
+                const sizeMm = isInch ? sizeValue * 25.4 : sizeValue;
+                const awg = mmToAwg(sizeMm);
+                const mm = awgToMm(awg);
+                const inches = mm / 25.4;
+                
+                resultElement.innerHTML = `
+                    ${sizeValue} ${isInch ? 'inch' : 'mm'} ≈ AWG <strong>${awg}</strong><br>
+                    Diameter: ${mm.toFixed(4)} mm / ${inches.toFixed(6)} inches
+                `;
+            } else {
+                resultElement.textContent = 'Vui lòng chỉ nhập giá trị vào một trường.';
+            }
+        });
+
+        // Litz wire calculation
+        document.getElementById('calculateLitzBtn').addEventListener('click', function() {
+            const strands = parseInt(document.getElementById('strands').value);
+            const wireDiameter = parseFloat(document.getElementById('wireDiameter').value);
+            const insulation = parseFloat(document.getElementById('insulationThickness').value) || 0;
+            
+            if (isNaN(strands) || isNaN(wireDiameter) || strands < 1 || wireDiameter <= 0) {
+                alert('Vui lòng nhập giá trị hợp lệ cho số sợi và đường kính dây.');
+                return;
+            }
+            
+            // Calculate overall diameter using the formula: wire diameter * sqrt(no of strands)
+            const overallDiameter = 1.155 * wireDiameter * Math.sqrt(strands);
+            
+            // Calculate overall diameter with insulation
+            const overallDiameterInsulated = overallDiameter + (2 * insulation);
+            
+            // Calculate cross-sectional area
+            const crossSection = strands * (Math.PI * Math.pow(wireDiameter/2, 2));
+            
+            // Update results
+            document.getElementById('overallDiameter').textContent = overallDiameter.toFixed(4);
+            document.getElementById('overallDiameterInsulated').textContent = overallDiameterInsulated.toFixed(4);
+            document.getElementById('crossSection').textContent = crossSection.toFixed(4);
+        });
+
+        // DCR calculation
+        document.getElementById('calculateDcrBtn').addEventListener('click', function() {
+            // Get input values
+            const meanTurnLength = parseFloat(document.getElementById('meanTurnLength').value);
+            const numberOfTurns = parseInt(document.getElementById('numberOfTurns').value);
+            const sectionArea = parseFloat(document.getElementById('sectionArea').value);
+            
+            // Check input values
+            if (isNaN(meanTurnLength) || isNaN(numberOfTurns) || isNaN(sectionArea) || 
+                meanTurnLength <= 0 || numberOfTurns <= 0 || sectionArea <= 0) {
+                alert('Vui lòng nhập giá trị hợp lệ cho tất cả các trường!');
+                return;
+            }
+            
+            // Constants
+            const copperResistivity = 1.68e-8; // Ω·m (điện trở suất của đồng)
+            const copperDensity = 8960; // kg/m³ (khối lượng riêng của đồng)
+            
+            // Calculations
+            const totalLength = meanTurnLength * numberOfTurns; // Total wire length (m)
+            const sectionAreaM2 = sectionArea * 1e-6; // Convert from mm² to m²
+            
+            // Calculate DCR (R = ρ * L / S)
+            const dcr = copperResistivity * totalLength / sectionAreaM2;
+            
+            // Calculate copper weight (W = V * ρ = (L * S) * ρ)
+            const volume = totalLength * sectionAreaM2; // m³
+            const copperWeight = volume * copperDensity; // kg
+            
+            // Display results
+            document.getElementById('dcrResult').textContent = dcr.toFixed(6);
+            document.getElementById('copperWeightResult').textContent = copperWeight.toFixed(6);
+            document.getElementById('copperWeightGrams').textContent = (copperWeight * 1000).toFixed(2);
+        });
+    </script>
+</body>
+</html>
